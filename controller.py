@@ -204,3 +204,4 @@ class Controller:
         self.main_window.button_delete_course.setEnabled(False)
         self.main_window.button_clear_table.setEnabled(False)
         self.main_window.button_pull.setEnabled(True)
+        self.main_window.button_calculate.setEnabled(False)
