@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'form_mainBfzVtH.ui'
+## Form generated from reading UI file 'form_mainFBhTJL.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.3
 ##
@@ -21,22 +21,14 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
     QPushButton, QSizePolicy, QTableWidget, QTableWidgetItem,
     QVBoxLayout, QWidget)
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QSizePolicy,
-    QWidget)
-
 class Ui_main_window(object):
     def setupUi(self, main_window):
         if not main_window.objectName():
             main_window.setObjectName(u"main_window")
         main_window.setEnabled(True)
         main_window.resize(441, 528)
+        main_window.setMinimumSize(QSize(441, 528))
+        main_window.setMaximumSize(QSize(441, 528))
         icon = QIcon()
         icon.addFile(u"icons/favicon.ico", QSize(), QIcon.Normal, QIcon.Off)
         main_window.setWindowIcon(icon)
@@ -167,16 +159,36 @@ class Ui_main_window(object):
         self.menu.setTitle(QCoreApplication.translate("main_window", u"\u0130T\u00dc \u00d6BS'ne Giri\u015f Yap", None))
     # retranslateUi
 
+# -*- coding: utf-8 -*-
 
+################################################################################
+## Form generated from reading UI file 'form_loginZfhPmO.ui'
+##
+## Created by: Qt User Interface Compiler version 6.4.3
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QWidget)
 
 class Ui_window_login(object):
     def setupUi(self, window_login):
         if not window_login.objectName():
             window_login.setObjectName(u"window_login")
         window_login.setWindowModality(Qt.WindowModal)
-        window_login.resize(343, 161)
+        window_login.resize(348, 158)
+        window_login.setMinimumSize(QSize(348, 158))
+        window_login.setMaximumSize(QSize(348, 158))
         icon = QIcon()
-        icon.addFile(u"icons/login.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"login.ico", QSize(), QIcon.Normal, QIcon.Off)
         window_login.setWindowIcon(icon)
         window_login.setAutoFillBackground(False)
         self.input_username = QLineEdit(window_login)
@@ -219,22 +231,46 @@ class Ui_window_login(object):
         self.label_password_2.setText(QCoreApplication.translate("window_login", u"Pin:", None))
     # retranslateUi
 
+# -*- coding: utf-8 -*-
+
+################################################################################
+## Form generated from reading UI file 'form_errormgaDQD.ui'
+##
+## Created by: Qt User Interface Compiler version 6.4.3
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QSizePolicy,
+    QWidget)
+
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(278, 129)
+        Form.resize(322, 129)
+        Form.setMinimumSize(QSize(322, 129))
+        Form.setMaximumSize(QSize(322, 129))
         icon = QIcon()
-        icon.addFile(u"icons/error.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"error.ico", QSize(), QIcon.Normal, QIcon.Off)
         Form.setWindowIcon(icon)
         self.horizontalLayoutWidget = QWidget(Form)
         self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setGeometry(QRect(10, 10, 261, 111))
+        self.horizontalLayoutWidget.setGeometry(QRect(10, 10, 301, 111))
         self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.label = QLabel(self.horizontalLayoutWidget)
         self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(299, 109))
+        self.label.setMaximumSize(QSize(299, 109))
         self.label.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout.addWidget(self.label)
@@ -249,5 +285,6 @@ class Ui_Form(object):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Hata", None))
         self.label.setText(QCoreApplication.translate("Form", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\"></span></p></body></html>", None))
     # retranslateUi
+
 
 
