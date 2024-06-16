@@ -22,7 +22,7 @@ class Model:
         total_credits = sum(float(credit) for credit in self.course_credits)
         return total / total_credits if total_credits else 0.0
     
-    def connect_to_system(self, username, password, pin):
+    def connect_to_system(self, username, password):
         options = Options()
         options.add_argument("--headless")
         options.profile = webdriver.FirefoxProfile()

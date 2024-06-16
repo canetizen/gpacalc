@@ -1,23 +1,26 @@
-import sys
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QFile, QIODevice
+from PySide6.QtCore import QFile
 
 class View:
     def __init__(self):
-        loader = QUiLoader()
+        loader1 = QUiLoader()
+        loader2 = QUiLoader()
+        loader3 = QUiLoader()
 
-        ui_file = QFile("ui/form_main.ui")
-        ui_file.open(QFile.ReadOnly)
-        self.main_window = loader.load(ui_file)
-        ui_file.close()
+        # Load main window
+        ui_file1 = QFile("ui/form_main.ui")
+        ui_file1.open(QFile.ReadOnly)
+        self.main_window = loader1.load(ui_file1)
+        ui_file1.close()
 
-        ui_file = QFile("ui/form_login.ui")
-        ui_file.open(QFile.ReadOnly)
-        self.login_window = loader.load(ui_file)
-        ui_file.close()
+        # Load login window
+        ui_file2 = QFile("ui/form_login.ui")
+        ui_file2.open(QFile.ReadOnly)
+        self.login_window = loader2.load(ui_file2)
+        ui_file2.close()
 
-        ui_file = QFile("ui/form_error.ui")
-        ui_file.open(QFile.ReadOnly)
-        self.error_window = loader.load(ui_file)
-        ui_file.close()
+        # Load error window
+        ui_file3 = QFile("ui/form_error.ui")
+        ui_file3.open(QFile.ReadOnly)
+        self.error_window = loader3.load(ui_file3)
+        ui_file3.close()

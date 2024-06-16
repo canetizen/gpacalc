@@ -3,11 +3,7 @@
 from model import Model
 from view import View
 from PySide6.QtWidgets import QTableWidgetItem
-from PySide6 import QtWidgets, QtGui
-import atexit
-from PySide6.QtWidgets import QApplication
-import sys
-
+from PySide6 import QtGui
 from selenium.webdriver.common.by import By
 
 class Controller:
@@ -18,6 +14,7 @@ class Controller:
         self.view.main_window.show()
 
         self.view.main_window.button_delete_course.clicked.connect(self.delete_row)
+        self.view.main_window.button_add_course.clicked.connect(self.add_row)
         self.view.main_window.button_calculate.clicked.connect(self.calculate)
         self.view.main_window.button_clear_table.clicked.connect(self.clear_table)
         self.view.main_window.button_pull.clicked.connect(self.pull)
@@ -37,9 +34,9 @@ class Controller:
         self.view.error_window.show()
 
     def log_in(self):
+        self.view.login_window.button_login.setEnabled(True)
         self.view.login_window.input_password.setText("")
         self.view.login_window.input_username.setText("")
-        self.view.login_window.input_pin.setText("")
         self.view.login_window.show()
 
     def disconnect(self):
@@ -54,7 +51,8 @@ class Controller:
             self.show_error("Lütfen tüm alanları doldurunuz.")
             return
         else:
-            result = self.model.connect_to_system(self.view.login_window.input_username.text(), self.view.login_window.input_password.text(), self.view.login_window.input_pin.text())
+            self.view.login_window.button_login.setEnabled(False)
+            result = self.model.connect_to_system(self.view.login_window.input_username.text(), self.view.login_window.input_password.text())
             if result != "":
                 self.view.error_window.label.setText(result)
                 self.view.error_window.show()
@@ -95,6 +93,8 @@ class Controller:
 
 
     def pull(self):
+        self.view.main_window.progressBar.setEnabled(True)
+        self.view.main_window.progressBar.setValue(0)
         max_course_per_term = 15
         max_term = 8
         pulled_course_dict = dict()
@@ -115,9 +115,13 @@ class Controller:
                         continue
             except:
                 continue
+            self.view.main_window.progressBar.setValue(self.view.main_window.progressBar.value() + 5)
         self.add_to_table(pulled_course_dict)
+        self.view.main_window.progressBar.setValue(60)
         self.find_course_from_sis()
+        self.view.main_window.progressBar.setValue(100)
 
+        self.view.main_window.progressBar.setEnabled(False)
         self.view.main_window.button_delete_course.setEnabled(True)
         self.view.main_window.button_calculate.setEnabled(True)
         self.view.main_window.button_clear_table.setEnabled(True)
