@@ -1,69 +1,53 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.edge.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
+from webdriver_manager.firefox import GeckoDriverManager
 
 class Model:
     def __init__(self):
         self.driver = None
         self.course_letter_grades = []
         self.course_credits = []
-        self.letter_grade_dict = {"AA": 4.0, "BA": 3.5, "BB": 3.0, "CB": 2.5, "CC": 2.0, "DC": 1.5, "DD": 1.0, "FF": 0.0, "VF": 0.0, "BL": 0.0, "BZ": 0.0}
+        self.letter_grade_dict = {
+            "AA": 4.0, "BA": 3.5, "BA+": 3.75, "BB": 3.0, "BB+": 3.25, 
+            "CB": 2.5, "CB+": 2.75, "CC": 2.0, "CC+": 2.25, 
+            "DC": 1.5, "DC+": 1.75, "DD": 1.0, "DD+": 1.25, 
+            "FF": 0.0, "VF": 0.0, "BL": 0.0, "BZ": 0.0
+        }
 
     def calculate_gpa(self):
-        index = 0
-        total = 0.0
-        for x in self.course_letter_grades:
-            total += self.letter_grade_dict[x] * float(self.course_credits[index])
-            index += 1
-        return total / sum(self.course_credits)
+        total = sum(self.letter_grade_dict.get(grade, 0) * float(credit)
+                    for grade, credit in zip(self.course_letter_grades, self.course_credits))
+        total_credits = sum(float(credit) for credit in self.course_credits)
+        return total / total_credits if total_credits else 0.0
     
     def connect_to_system(self, username, password, pin):
+        options = Options()
+        options.add_argument("--headless")
+        options.profile = webdriver.FirefoxProfile()
+        driver_path = "/snap/bin/firefox.geckodriver"
+        # driver_path = GeckoDriverManager.install() // this doesnt work for some reason
+        service = Service(driver_path)
+        
         try:
-            edge_options = Options()
-            edge_options.add_argument("--headless")
-            self.driver = webdriver.Edge(options=edge_options)
-            self.driver.get("http://uzay.sis.itu.edu.tr/login/index.php")
+            self.driver = webdriver.Firefox(service=service, options=options)
+            self.driver.get("https://kepler-beta.itu.edu.tr/")
+            
+            if "Tüm İTÜ hizmetleri" in self.driver.page_source:
+                username_input = self.driver.find_element(By.ID, "ContentPlaceHolder1_tbUserName")
+                password_input = self.driver.find_element(By.ID, "ContentPlaceHolder1_tbPassword")
+                login_button = self.driver.find_element(By.ID, "ContentPlaceHolder1_btnLogin")
 
-            page_content = self.driver.page_source
-
-            if "Tüm İTÜ hizmetleri" in page_content:
-                username_input = self.driver.find_element("id", "ContentPlaceHolder1_tbUserName")
-                password_input = self.driver.find_element("id", "ContentPlaceHolder1_tbPassword")
-                login_button = self.driver.find_element("id", "ContentPlaceHolder1_btnLogin")
-                
                 username_input.send_keys(username)
                 password_input.send_keys(password)
                 login_button.click()
 
-                page_content = self.driver.page_source
-                
-                if "Kullanıcı adı veya şifre hatalı." in page_content:
-                    self.driver.close()
+                if "Kullanıcı adı veya şifre hatalı." in self.driver.page_source:
                     return "Kullanıcı adı ya da şifre hatalı."
-                else:
-                    page_content_before = self.driver.page_source
-
-                    pin_input = self.driver.find_element("name", "PIN")
-                    pin_input.send_keys(pin)
-                    login_obs = self.driver.find_element(By.XPATH, "/html/body/div[3]/form/p/input[1]")
-                    login_obs.click()
-
-                    page_content_after = self.driver.page_source
-                    
-                    if page_content_before == page_content_after:
-                        self.driver.close()
-                        return "Pin hatalı."
-                    else:
-                        ogrenci_servisi = self.driver.find_element(By.XPATH, "/html/body/div[3]/table[2]/tbody/tr[1]/td[2]/a")
-                        ogrenci_servisi.click()
-                        ogrenci_bilgileri = self.driver.find_element(By.XPATH, "/html/body/div[3]/table[1]/tbody/tr[2]/td[2]/a")
-                        ogrenci_bilgileri.click()
-                        transkript = self.driver.find_element(By.XPATH, "/html/body/div[3]/table[1]/tbody/tr[3]/td[2]/a")
-                        transkript.click()
-                        return ""
-        except:
-            self.driver.close()
-            return "İTÜ ÖBS'ne ulaşılamadı."
+            
+            self.driver.get("https://kepler-beta.itu.edu.tr/ogrenci/NotBilgileri/DonemSonuNotlari")
+            return ""
         
-    
+        except Exception as e:
+            return f"Hata oluştu: {str(e)}"
