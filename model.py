@@ -49,7 +49,7 @@ class Model:
                 login_button.click()
 
                 if "Kullanıcı adı veya şifre hatalı." in self.driver.page_source:
-                    return "Kullanıcı adı ya da şifre hatalı."
+                    return "Kullanıcı adı veya şifre hatalı."
             
             return ""
             
