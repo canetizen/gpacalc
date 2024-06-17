@@ -1,5 +1,6 @@
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile
+from PySide6.QtCore import QFile, Qt
+from PySide6.QtWidgets import QMainWindow
 
 class View:
     def __init__(self):
@@ -24,3 +25,7 @@ class View:
         ui_file3.open(QFile.ReadOnly)
         self.error_window = loader3.load(ui_file3)
         ui_file3.close()
+
+        # Set fixed size to prevent resizing
+        for window in [self.main_window, self.login_window, self.error_window]:
+            window.setFixedSize(window.size())

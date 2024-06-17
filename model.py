@@ -3,6 +3,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
 from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 class Model:
     def __init__(self):
@@ -23,8 +26,10 @@ class Model:
         return total / total_credits if total_credits else 0.0
     
     def connect_to_system(self, username, password):
+
+
         options = Options()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.profile = webdriver.FirefoxProfile()
         driver_path = "/snap/bin/firefox.geckodriver"
         # driver_path = GeckoDriverManager.install() // this doesnt work for some reason
@@ -46,8 +51,16 @@ class Model:
                 if "Kullanıcı adı veya şifre hatalı." in self.driver.page_source:
                     return "Kullanıcı adı ya da şifre hatalı."
             
-            self.driver.get("https://kepler-beta.itu.edu.tr/ogrenci/NotBilgileri/DonemSonuNotlari")
             return ""
-        
+            
         except Exception as e:
             return f"Hata oluştu: {str(e)}"
+
+    def find_element_with_timeout(self, by, locator, timeout=3):
+        try:
+            element = WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located((by, locator))
+            )
+            return element
+        except TimeoutException:
+            return None
