@@ -42,9 +42,9 @@ class Controller:
         self.option_disconnect.setVisible(False)
 
     def connect(self):
-        if self.view.login_window.input_username.text() == "" or self.view.login_window.input_password.text() == "":
-            raise Exception("Lütfen tüm alanları doldurunuz.")
-        try:
+        try:    
+            if self.view.login_window.input_username.text() == "" or self.view.login_window.input_password.text() == "":
+                raise Exception("Lütfen tüm alanları doldurunuz.")
             self.driver_handler.connect_to_system(self.view.login_window.input_username.text(), self.view.login_window.input_password.text())
             self.view.main_window.button_pull.setEnabled(True)
             self.view.login_window.close()
@@ -52,6 +52,7 @@ class Controller:
             self.option_disconnect.setVisible(True)
             self.option_connect.setVisible(False)
         except Exception as e:
+            print(e)
             self.view.show_error(f"Hata: {e}")
             self.driver_handler.close_driver()
 
@@ -138,4 +139,4 @@ class Controller:
             else:
                  self.view.main_window.label.setText("Lütfen tüm hücreleri doldurunuz.")
                  return
-        self.view.main_window.label.setText(f"Toplam Ders: {self.view.main_window.table.rowCount()}, Ortalama: {self.calculator.calculate_gpa():.2f}")
+        self.view.main_window.label.setText(f"Top. Ders: {self.view.main_window.table.rowCount()}, Top. Kredi: {sum(self.calculator.course_credits)}, Genel Ort.: {self.calculator.calculate_gpa():.2f}")

@@ -38,7 +38,7 @@ class WebDriverHandler:
             options.add_argument("--headless")
         options.profile = webdriver.FirefoxProfile()
         driver_path = "/snap/bin/firefox.geckodriver"
-        # driver_path = GeckoDriverManager.install() // this doesn't work for some reason
+        # driver_path = GeckoDriverManager().install() # this doesn't work for some reason
         service = Service(driver_path)
         
         self.driver = webdriver.Firefox(service=service, options=options)
