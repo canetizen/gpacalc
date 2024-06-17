@@ -7,9 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-class Model:
+class GPACalculator:
     def __init__(self):
-        self.driver = None
         self.course_letter_grades = []
         self.course_credits = []
         self.letter_grade_dict = {
@@ -24,37 +23,43 @@ class Model:
                     for grade, credit in zip(self.course_letter_grades, self.course_credits))
         total_credits = sum(float(credit) for credit in self.course_credits)
         return total / total_credits if total_credits else 0.0
-    
-    def connect_to_system(self, username, password):
 
+    def add_course(self, grade, credit):
+        self.course_letter_grades.append(grade)
+        self.course_credits.append(credit)
 
+class WebDriverHandler:
+    def __init__(self):
+        self.driver = None
+
+    def setup_driver(self, headless=True):
         options = Options()
-        # options.add_argument("--headless")
+        if headless:
+            options.add_argument("--headless")
         options.profile = webdriver.FirefoxProfile()
         driver_path = "/snap/bin/firefox.geckodriver"
-        # driver_path = GeckoDriverManager.install() // this doesnt work for some reason
+        # driver_path = GeckoDriverManager.install() // this doesn't work for some reason
         service = Service(driver_path)
         
-        try:
-            self.driver = webdriver.Firefox(service=service, options=options)
-            self.driver.get("https://kepler-beta.itu.edu.tr/")
-            
-            if "Tüm İTÜ hizmetleri" in self.driver.page_source:
-                username_input = self.driver.find_element(By.ID, "ContentPlaceHolder1_tbUserName")
-                password_input = self.driver.find_element(By.ID, "ContentPlaceHolder1_tbPassword")
-                login_button = self.driver.find_element(By.ID, "ContentPlaceHolder1_btnLogin")
+        self.driver = webdriver.Firefox(service=service, options=options)
+        return self.driver
 
-                username_input.send_keys(username)
-                password_input.send_keys(password)
-                login_button.click()
+    def connect_to_system(self, username, password):
+        if not self.driver:
+            self.setup_driver(headless=False)
+        self.driver.get("https://kepler-beta.itu.edu.tr/")
+        
+        if "Tüm İTÜ hizmetleri" in self.driver.page_source:
+            username_input = self.driver.find_element(By.ID, "ContentPlaceHolder1_tbUserName")
+            password_input = self.driver.find_element(By.ID, "ContentPlaceHolder1_tbPassword")
+            login_button = self.driver.find_element(By.ID, "ContentPlaceHolder1_btnLogin")
 
-                if "Kullanıcı adı veya şifre hatalı." in self.driver.page_source:
-                    return "Kullanıcı adı veya şifre hatalı."
-            
-            return ""
-            
-        except Exception as e:
-            return f"Hata oluştu: {str(e)}"
+            username_input.send_keys(username)
+            password_input.send_keys(password)
+            login_button.click()
+
+            if "Kullanıcı adı veya şifre hatalı." in self.driver.page_source:
+                raise Exception("Kullanıcı adı veya şifre hatalı.")
 
     def find_element_with_timeout(self, by, locator, timeout=3):
         try:
@@ -64,3 +69,7 @@ class Model:
             return element
         except TimeoutException:
             return None
+
+    def close_driver(self):
+        if self.driver:
+            self.driver.quit()
