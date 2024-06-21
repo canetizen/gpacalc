@@ -2,7 +2,7 @@
 GPACalc connects to ITU SIS using the Selenium webdriver, and with the data it retrieves from there, it assists in recalculating GPA based on new added and modified grades.
 <br>
 <br>
-Having Firefox browser is necessary. If visual tracking is desired during course scraping, the headless feature should be set to True.
+Having Firefox browser is necessary. If visual tracking is not desired during course scraping, the headless feature should be set to False.
 <br>
 <br>
 <img src="https://github.com/canetizen/GPACalc/assets/81326097/012be953-1797-4919-9a0b-b4c6e4968642" width=32%> 
