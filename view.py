@@ -1,5 +1,6 @@
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile
+from PySide6 import QtGui
 
 class View:
     def __init__(self):
@@ -7,6 +8,11 @@ class View:
         self.error_window = None
         self.login_window = None
         self.setupView()
+        self.option_connect = QtGui.QAction("Sisteme bağlan", self.main_window)
+        self.option_disconnect = QtGui.QAction("Bağlantıyı kes", self.main_window)
+        self.main_window.menu.addAction(self.option_connect)
+        self.main_window.menu.addAction(self.option_disconnect)
+        self.option_disconnect.setVisible(False)
 
     def setupView(self):
         loader = QUiLoader()
@@ -72,3 +78,6 @@ class View:
     def show_error(self, message):
         self.error_window.label.setText(f"Hata: {message}")
         self.error_window.show()
+
+    def show_status(self, message):
+        self.main_window.label.setText(message)

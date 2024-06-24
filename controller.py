@@ -3,7 +3,6 @@
 from model import WebDriverHandler, GPACalculator
 from view import View
 from PySide6.QtWidgets import QTableWidgetItem
-from PySide6 import QtGui
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
@@ -16,30 +15,22 @@ class Controller:
 
         self.view = View()
 
-        self.view.main_window.show()
-
         self.view.main_window.button_delete_course.clicked.connect(self.view.delete_row)
         self.view.main_window.button_add_course.clicked.connect(self.view.add_row)
         self.view.main_window.button_calculate.clicked.connect(self.calculate)
         self.view.main_window.button_clear_table.clicked.connect(self.view.clear_table)
         self.view.main_window.button_pull.clicked.connect(self.pull)
-        self.option_connect = QtGui.QAction("Sisteme bağlan", self.view.main_window)
-        self.option_connect.triggered.connect(self.view.login)
-        self.view.main_window.menu.addAction(self.option_connect)
-
-        self.option_disconnect = QtGui.QAction("Bağlantıyı kes", self.view.main_window)
-        self.option_disconnect.triggered.connect(self.disconnect)
-        self.view.main_window.menu.addAction(self.option_disconnect)
-        self.option_disconnect.setVisible(False)
-
+        self.view.option_connect.triggered.connect(self.view.login)
+        self.view.option_disconnect.triggered.connect(self.disconnect)
         self.view.login_window.button_login.clicked.connect(self.connect)
+        self.view.main_window.show()
 
     def disconnect(self):
         self.driver_handler.close_driver()
         self.view.main_window.menu.setTitle("İTÜ ÖBS'ne Giriş Yap")
         self.view.main_window.button_pull.setEnabled(False)
-        self.option_connect.setVisible(True)
-        self.option_disconnect.setVisible(False)
+        self.view.option_connect.setVisible(True)
+        self.view.option_disconnect.setVisible(False)
 
     def connect(self):
         try:    
@@ -49,8 +40,8 @@ class Controller:
             self.view.main_window.button_pull.setEnabled(True)
             self.view.login_window.close()
             self.view.main_window.menu.setTitle(f"Kullanıcı: {self.view.login_window.input_username.text()}")
-            self.option_disconnect.setVisible(True)
-            self.option_connect.setVisible(False)
+            self.view.option_disconnect.setVisible(True)
+            self.view.option_connect.setVisible(False)
         except Exception as e:
             print(e)
             self.view.show_error(f"Hata: {e}")
@@ -87,7 +78,7 @@ class Controller:
 
     def pull(self):
         global max_course_per_term
-        self.view.main_window.label.setText(f"Dersler Kepler'den alınıyor...")
+        self.view.show_status(f"Dersler Kepler'den alınıyor...")
         self.view.main_window.progressBar.setEnabled(True)
         self.driver_handler.driver.get("https://kepler-beta.itu.edu.tr/ogrenci/NotBilgileri/DonemSonuNotlari")
         self.view.main_window.progressBar.setValue(0)
@@ -113,7 +104,7 @@ class Controller:
         self.find_course_from_sis()
         self.view.main_window.progressBar.setValue(100)
 
-        self.view.main_window.label.setText(f"")
+        self.view.show_status(f"")
         self.view.main_window.progressBar.setEnabled(False)
         self.view.main_window.button_delete_course.setEnabled(True)
         self.view.main_window.button_calculate.setEnabled(True)
@@ -128,15 +119,15 @@ class Controller:
             letter = self.view.main_window.table.item(row, 2)
             if credit is not None and letter is not None:
                 if letter.text().upper() not in self.calculator.letter_grade_dict:
-                    self.view.main_window.label.setText("Lütfen uygun harf notu değerleri giriniz.")
+                    self.view.show_status("Lütfen uygun harf notu değerleri giriniz.")
                     return
                 try:    
                     self.calculator.course_credits.append(float(credit.text()))
                 except:
-                    self.view.main_window.label.setText("Lütfen uygun kredi değerleri giriniz.")
+                    self.view.show_status("Lütfen uygun kredi değerleri giriniz.")
                     return
                 self.calculator.course_letter_grades.append(letter.text().upper()) 
             else:
-                 self.view.main_window.label.setText("Lütfen tüm hücreleri doldurunuz.")
+                 self.view.show_status("Lütfen tüm hücreleri doldurunuz.")
                  return
-        self.view.main_window.label.setText(f"Top. Ders: {self.view.main_window.table.rowCount()}, Top. Kredi: {sum(self.calculator.course_credits)}, Genel Ort.: {self.calculator.calculate_gpa():.2f}")
+        self.view.show_status(f"Top. Ders: {self.view.main_window.table.rowCount()}, Top. Kredi: {sum(self.calculator.course_credits)}, Genel Ort.: {self.calculator.calculate_gpa():.2f}")

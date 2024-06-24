@@ -32,7 +32,7 @@ class WebDriverHandler:
     def __init__(self):
         self.driver = None
 
-    def setup_driver(self, headless=True):
+    def setup_driver(self, headless=True): # To turn off browser view, set it to False.
         options = Options()
         if headless:
             options.add_argument("--headless")
