@@ -58,12 +58,13 @@ class Controller:
 
     def find_course_from_sis(self):
         self.driver_handler.driver.get("https://www.sis.itu.edu.tr/EN/student/undergraduate/course-information/course-information.php")
+        print(self.view.main_window.table.rowCount())
         for i in range(self.view.main_window.table.rowCount()):
             if i % 2 == 0:
                 self.view.main_window.progressBar.setValue(self.view.main_window.progressBar.value() + 1)
-            code_input = self.driver_handler.find_element_with_timeout(By.XPATH, "/html/body/div/div[2]/div/div[1]/form/div[1]/input")
-            number_input = self.driver_handler.find_element_with_timeout(By.XPATH, "/html/body/div/div[2]/div/div[1]/form/div[2]/input")
-            search_button = self.driver_handler.find_element_with_timeout(By.XPATH, "/html/body/div/div[2]/div/div[1]/form/input")
+            code_input = self.driver_handler.find_element_with_timeout(By.XPATH, "/html/body/div/div[2]/div/div/form/div[1]/input")
+            number_input = self.driver_handler.find_element_with_timeout(By.XPATH, "/html/body/div/div[2]/div/div/form/div[2]/input")
+            search_button = self.driver_handler.find_element_with_timeout(By.XPATH, "/html/body/div/div[2]/div/div/form/input")
             code_input.clear()
             number_input.clear()
             course = self.view.main_window.table.item(i, 0).text()
@@ -84,17 +85,17 @@ class Controller:
         self.view.main_window.progressBar.setValue(0)
         
         pulled_course_dict = dict()
-        menu_button = self.driver_handler.find_element_with_timeout(By.XPATH, f'/html/body/div/main/div[2]/div/div/div[2]/div/div/div/select')
+        menu_button = self.driver_handler.find_element_with_timeout(By.XPATH, f'/html/body/div/main/div[2]/div/div/div[3]/div/div/div/select')
         select = Select(menu_button)
         for i in range(len(select.options) - 1, -1, -1):
             self.view.main_window.progressBar.setValue(self.view.main_window.progressBar.value() + 5)
             try:
                 select.select_by_index(i)
                 for x in range(1, max_course_per_term + 1):
-                    course_name = self.driver_handler.find_element_with_timeout(By.XPATH, f'/html/body/div/main/div[2]/div/div/div[3]/div/div/div/table/tbody/tr[{x}]/td[{2}]').text
+                    course_name = self.driver_handler.find_element_with_timeout(By.XPATH, f'/html/body/div/main/div[2]/div/div/div[4]/div/div/div/table/tbody/tr[{x}]/td[{2}]').text
                     pulled_course_dict[course_name] = []
                     for y in range(3, 5):
-                        row_value = self.driver_handler.find_element_with_timeout(By.XPATH, f'/html/body/div/main/div[2]/div/div/div[3]/div/div/div/table/tbody/tr[{x}]/td[{y}]').text
+                        row_value = self.driver_handler.find_element_with_timeout(By.XPATH, f'/html/body/div/main/div[2]/div/div/div[4]/div/div/div/table/tbody/tr[{x}]/td[{y}]').text
                         pulled_course_dict[course_name].append(row_value)
             except:
                 continue

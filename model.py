@@ -61,7 +61,7 @@ class WebDriverHandler:
             if "Kullanıcı adı veya şifre hatalı." in self.driver.page_source:
                 raise Exception("Kullanıcı adı veya şifre hatalı.")
 
-    def find_element_with_timeout(self, by, locator, timeout=3):
+    def find_element_with_timeout(self, by, locator, timeout=5):
         try:
             element = WebDriverWait(self.driver, timeout).until(
                 EC.visibility_of_element_located((by, locator))
